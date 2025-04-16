@@ -1,9 +1,10 @@
-import { createRouteHandler } from "uploadthing/server";
+// app/api/upload/route.ts
+
 import { createUploadthing, type FileRouter } from "uploadthing/server";
-import type { NextRequest } from "next/server";
+import { createRouteHandler } from "uploadthing/server";
 
+// 1) Define your UploadThing router
 const f = createUploadthing();
-
 const fileRouter = {
   imageUploader: f({ image: { maxFileSize: "4MB", maxFileCount: 1 } })
     .onUploadComplete(async ({ file }) => {
@@ -12,6 +13,6 @@ const fileRouter = {
     }),
 } satisfies FileRouter;
 
-export const { POST }: { POST: (req: NextRequest) => Promise<Response> } = createRouteHandler({
-  router: fileRouter,
-});
+const handler = createRouteHandler({ router: fileRouter });
+
+export { handler as POST };
